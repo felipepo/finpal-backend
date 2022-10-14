@@ -6,8 +6,12 @@ const router = express.Router()
 //Post Method
 router.post('/transactions', async (req, res) => {
     const data = new Model({
-        name: req.body.name,
-        age: req.body.age
+        type: req.body.type,
+        value: req.body.value,
+        date: req.body.date,
+        comment: req.body.comment,
+        category: req.body.category,
+        isInvestment: req.body.isInvestment
     })
 
     try {
@@ -15,7 +19,7 @@ router.post('/transactions', async (req, res) => {
         res.status(200).json(dataToSave)
     }
     catch (error) {
-        res.status(400).json({message: error.message})
+        res.status(400).json({messvalue: error.messvalue})
     }
 })
 
@@ -26,7 +30,7 @@ router.get('/transactions', async (req, res) => {
         res.json(data)
     }
     catch(error){
-        res.status(500).json({message: error.message})
+        res.status(500).json({messvalue: error.messvalue})
     }
 })
 
@@ -37,7 +41,7 @@ router.get('/getOne/:id', async (req, res) => {
         res.json(data)
     }
     catch(error){
-        res.status(500).json({message: error.message})
+        res.status(500).json({messvalue: error.messvalue})
     }
 })
 
@@ -55,7 +59,7 @@ router.patch('/update/:id', async (req, res) => {
         res.send(result)
     }
     catch (error) {
-        res.status(400).json({ message: error.message })
+        res.status(400).json({ messvalue: error.messvalue })
     }
 })
 
@@ -64,10 +68,10 @@ router.delete('/delete/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const data = await Model.findByIdAndDelete(id)
-        res.send(`Document with ${data.name} has been deleted..`)
+        res.send(`Document with ${data.type} has been deleted..`)
     }
     catch (error) {
-        res.status(400).json({ message: error.message })
+        res.status(400).json({ messvalue: error.messvalue })
     }
 })
 
