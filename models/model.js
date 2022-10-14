@@ -18,7 +18,7 @@ const dataSchema = new mongoose.Schema({
         type: String
     },
     comment: {
-        required: true,
+        required: false,
         type: String
     },
     isInvestment: {
