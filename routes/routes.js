@@ -4,7 +4,7 @@ const Model = require('../models/model');
 const router = express.Router()
 
 //Post Method
-router.post('/post', async (req, res) => {
+router.post('/transactions', async (req, res) => {
     const data = new Model({
         name: req.body.name,
         age: req.body.age
@@ -20,7 +20,7 @@ router.post('/post', async (req, res) => {
 })
 
 //Get all Method
-router.get('/getAll', async (req, res) => {
+router.get('/transactions', async (req, res) => {
     try{
         const data = await Model.find();
         res.json(data)

@@ -1,0 +1,42 @@
+openapi: 3.1.0
+info:
+  title: FinPal API
+  description: API to communicate with a mongoDB where data regarding Finpal application is available.
+  version: 0.0.1
+paths: 
+  /transactions:
+    get:
+      summary: Gets all transactions
+      description: Retrieves all transactions
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum: ["expense", "income"]
+                    description: Shows if the transaction is either an expense or an income.
+                  value:
+                    type: number
+                    description: How much is the expense.
+                  date:
+                    type: string
+                    description: When did the transaction occur.
+                  category:
+                    type: string
+                    description: In which category the transactions falls into.
+                  comment:
+                    type: string
+                    description: Comment about the transaction.
+                  isInvestment:
+                    type: boolean
+                    description: Is the transaction related to investment or not.
+        "404":
+          description: Error.
+    put:
+    post:
+    delete:
