@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const dataSchema = new mongoose.Schema({
+const transactionSchema = new mongoose.Schema({
     type: {
         required: true,
         type: String
@@ -25,6 +25,10 @@ const dataSchema = new mongoose.Schema({
         required: true,
         type: Boolean
     },
+    userID: {
+        required: true,
+        type: String
+    },
 })
 
-module.exports = mongoose.model('Data', dataSchema)
+module.exports = mongoose.model('Transaction', transactionSchema)
