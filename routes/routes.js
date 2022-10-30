@@ -77,6 +77,12 @@ router.post('/auth/login', async (req, res) => {
 })
 
 // Private Route
+router.get("/testAPI", async (req, res) => {
+
+    res.status(200).json({ msg: "Testing API" })
+});
+
+// Private Route
 router.get("/user/:id", checkToken, async (req, res) => {
     const id = req.params.id;
 
