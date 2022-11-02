@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const transactionSchema = new mongoose.Schema({
     type: {
         required: true,
-        type: String
+        type: String,
+        enum: { values: ['income', 'expense'], message: '{VALUE} is not supported' }
     },    
     value: {
         required: true,
