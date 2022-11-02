@@ -172,12 +172,12 @@ router.get('/transactions/all/:id', checkToken, async (req, res) => {
     }
 })
 
-//Post Method
 router.post('/transactions', checkToken, async (req, res) => {
+    const [day, month, year] = req.body.date.split("/");
     const data = new Transaction({
         type: req.body.type,
         value: req.body.value,
-        date: req.body.date,
+        date: `${month}/${day}/${year}`,
         comment: req.body.comment,
         category: req.body.category,
         isInvestment: req.body.isInvestment,
@@ -189,6 +189,7 @@ router.post('/transactions', checkToken, async (req, res) => {
         res.status(200).json(dataToSave)
     }
     catch (error) {
+        console.log(error)
         res.status(400).json({ messvalue: error.messvalue })
     }
 })
@@ -255,8 +256,13 @@ router.patch("/categories/:name", checkToken, async (req, res) => {
 router.delete("/categories/:id", checkToken, async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Category.findByIdAndDelete(id)
-        res.send(`Document with ${data.type} has been deleted..`)
+        const data = await Category.findByIdAndDelete(id);
+        const alreadyExist = await Transaction.findOne({ name: req.body.name, userID: req.body.userID });
+        if (alreadyExist) {
+            res.json({ msg: "There is at least one transaction using this category" });
+        } else {
+            res.status(200).json({ msg: `Category ${data.name} has been deleted.` });
+        }
     }
     catch (error) {
         res.status(400).json({ messvalue: error.messvalue })
