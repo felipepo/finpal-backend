@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const Category = require('../models/Category');
+const Budget = require('../models/Budget');
 
 const router = express.Router()
 
@@ -263,6 +264,76 @@ router.delete("/categories/:id", checkToken, async (req, res) => {
         } else {
             res.status(200).json({ msg: `Category ${data.name} has been deleted.` });
         }
+    }
+    catch (error) {
+        res.status(400).json({ messvalue: error.messvalue })
+    }
+});
+
+// Budget Routes ===========================================================================================
+router.get("/budgets/all/:id", checkToken, async (req, res) => {
+
+    // Check if user has budgets
+    const budgets = await Budget.find({ userID: req.params.id });
+    if (!budgets) { return res.status(404).json({ msg: "No budget for this user" }) }
+
+    res.status(200).json(budgets)
+});
+
+router.get("/budgets/:id", checkToken, async (req, res) => {
+    const budgetID = req.params.id;
+
+    // Check if budget exists
+    const budgets = await Budget.findById(budgetID, '-password');
+    if (!budgets) { return res.status(404).json({ msg: "No budget found" }) }
+
+    res.status(200).json(budgets)
+});
+
+router.post("/budgets", checkToken, async (req, res) => {
+    const alreadyExist = await Budget.findOne({ category: req.body.category, userID: req.body.userID });
+    if (alreadyExist) { return res.status(422).json({ msg: "Budget already exists." }) }
+
+    const data = new Budget({
+        category: req.body.category,
+        value: req.body.value,
+        userID: req.body.userID
+    })
+
+    try {
+        const dataToSave = await data.save();
+        res.status(200).json(dataToSave)
+    }
+    catch (error) {
+        res.status(400).json({ messvalue: error.messvalue })
+    }
+});
+
+router.patch("/budgets/:name", checkToken, async (req, res) => {
+    const alreadyExist = await Budget.findOne({ category: req.params.category, userID: req.body.userID });
+    if (!alreadyExist) { return res.status(422).json({ msg: "Budget not found" }) }
+
+    try {
+        const id = alreadyExist.id;
+        const updatedData = req.body;
+        const options = { new: true };
+
+        const result = await Budget.findByIdAndUpdate(
+            id, updatedData, options
+        )
+
+        res.status(200).json({ msg: result })
+    }
+    catch (error) {
+        res.status(400).json({ messvalue: error.messvalue })
+    }
+});
+
+router.delete("/budgets/:id", checkToken, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = await Budget.findByIdAndDelete(id);
+        res.status(200).json({ msg: `Budget ${data.name} has been deleted.` });
     }
     catch (error) {
         res.status(400).json({ messvalue: error.messvalue })
